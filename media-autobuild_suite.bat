@@ -146,7 +146,7 @@ set mpv_options_full=dvdnav cdda #egl-angle #html-build ^
 set iniOptions=arch license2 vpx2 x2643 x2652 other265 flac fdkaac mediainfo ^
 soxB ffmpegB2 ffmpegUpdate ffmpegChoice ffmpegKeepLegacyOpts mp4box rtmpdump mplayer2 mpv ^
 cores deleteSource strip pack logging bmx standalone updateSuite av1an aom faac exhale ffmbc ^
-curl cyanrip2 rav1e ripgrep dav1d libavif libheif vvc uvg266 jq dssim gifski avs2 dovitool ^
+curl cyanrip2 rav1e ripgrep dav1d dav2d libavif libheif vvc uvg266 jq dssim gifski avs2 dovitool ^
 hdr10plustool timeStamp noMintty ccache svthevc svtav1 svtvp9 xvc jo vlc CC jpegxl vvenc vvdec ^
 zlib ffmpegPath pkgUpdateTime
 @rem re-add autouploadlogs if we find some way to upload to github directly instead
@@ -378,6 +378,28 @@ if %builddav1d%==1 set "dav1d=y"
 if %builddav1d%==2 set "dav1d=n"
 if %builddav1d% GTR 2 GOTO dav1d
 if %deleteINI%==1 echo.dav1d=^%builddav1d%>>%ini%
+
+:dav2d
+if [0]==[%dav2dINI%] (
+    echo -------------------------------------------------------------------------------
+    echo -------------------------------------------------------------------------------
+    echo.
+    echo. Build dav2d [Alternative, faster AV2 decoder]?
+    echo. 1 = Yes
+    echo. 2 = No
+    echo.
+    echo. Binaries being built depends on "standalone=y" and are always static.
+    echo.
+    echo -------------------------------------------------------------------------------
+    echo -------------------------------------------------------------------------------
+    set /P builddav2d="Build dav2d: "
+) else set builddav2d=%dav2dINI%
+
+if "%builddav2d%"=="" GOTO dav2d
+if %builddav2d%==1 set "dav2d=y"
+if %builddav2d%==2 set "dav2d=n"
+if %builddav2d% GTR 2 GOTO dav2d
+if %deleteINI%==1 echo.dav2d=^%builddav2d%>>%ini%
 
 :libavif
 if [0]==[%libavifINI%] (
@@ -2002,7 +2024,7 @@ set compileArgs=--cpuCount=%cpuCount% --build32=%build32% --build64=%build64% ^
 --ffmpeg=%ffmpeg% --ffmpegUpdate=%ffmpegUpdate% --ffmpegChoice=%ffmpegChoice% --ffmpegKeepLegacyOpts=%ffmpegKeepLegacyOpts% --mplayer=%mplayer% ^
 --mpv=%mpv% --license=%license2%  --stripping=%stripFile% --packing=%packFile% --rtmpdump=%rtmpdump% ^
 --logging=%logging% --bmx=%bmx% --standalone=%standalone% --aom=%aom% --faac=%faac% --exhale=%exhale% ^
---ffmbc=%ffmbc% --curl=%curl% --cyanrip=%cyanrip% --rav1e=%rav1e% --ripgrep=%ripgrep% --dav1d=%dav1d% ^
+--ffmbc=%ffmbc% --curl=%curl% --cyanrip=%cyanrip% --rav1e=%rav1e% --ripgrep=%ripgrep% --dav1d=%dav1d% --dav2d=%dav2d% ^
 --vvc=%vvc% --uvg266=%uvg266% --vvenc=%vvenc% --vvdec=%vvdec% --jq=%jq% --jo=%jo% --dssim=%dssim% ^
 --gifski=%gifski% --avs2=%avs2% --dovitool=%dovitool% --hdr10plustool=%hdr10plustool% --timeStamp=%timeStamp% ^
 --noMintty=%noMintty% --ccache=%ccache% --svthevc=%svthevc% --svtav1=%svtav1% --svtvp9=%svtvp9% ^

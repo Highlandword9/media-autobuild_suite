@@ -56,7 +56,8 @@ while true; do
     --ripgrep=* ) ripgrep=${1#*=} && shift ;;
     --rav1e=* ) rav1e=${1#*=} && shift ;;
     --dav1d=* ) dav1d=${1#*=} && shift ;;
-    --libavif=* ) libavif=${1#*=} && shift ;;
+    --dav2d=* ) dav2d=${1#*=} && shift ;;    
+	--libavif=* ) libavif=${1#*=} && shift ;;
     --libheif=* ) libheif=${1#*=} && shift ;;
     --jpegxl=* ) jpegxl=${1#*=} && shift ;;
     --av1an=* ) av1an=${1#*=} && shift ;;
@@ -1405,6 +1406,18 @@ _check=(dav1d/dav1d.h dav1d.pc libdav1d.a)
 if { [[ $dav1d = y ]] || [[ $libavif = y ]] || { [[ $ffmpeg != no ]] && enabled libdav1d; }; } &&
     do_vcs "$SOURCE_REPO_DAV1D"; then
     do_uninstall include/dav1d "${_check[@]}"
+    extracommands=()
+    [[ $standalone = y ]] || extracommands=("-Denable_tools=false")
+    do_mesoninstall video -Denable_{tests,examples}=false "${extracommands[@]}"
+    do_checkIfExist
+    unset extracommands
+fi
+
+_check=(dav2d/dav2d.h dav2d.pc libdav2d.a)
+[[ $standalone = y ]] && _check+=(bin-video/dav2d.exe)
+if { [[ $dav2d = y ]] || [[ $libavif = y ]] || { [[ $ffmpeg != no ]] && enabled libdav2d; }; } &&
+    do_vcs "$SOURCE_REPO_DAV2D"; then
+    do_uninstall include/dav2d "${_check[@]}"
     extracommands=()
     [[ $standalone = y ]] || extracommands=("-Denable_tools=false")
     do_mesoninstall video -Denable_{tests,examples}=false "${extracommands[@]}"
